@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-test
+spec:
+  selector:
+      app: chapter-9
+  ports:
+    - protocol: TCP
+      port: 8080       # The port, the service listens on.
+      targetPort: 80   # The port, the traffic is sent to on the Pod.
+  type: LoadBalancer
+ 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-test
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: chapter-9
+  template:
+    metadata:
+      labels:
+        app: chapter-9
+    spec:
+      containers:
+        - name: chapter-9
+          image: ghcr.io/freespirit0/chapter-9:main
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
