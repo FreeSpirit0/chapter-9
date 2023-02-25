@@ -33,8 +33,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker-Compose Publish
-        uses: pennsignals/publish_docker-compose@v0.1.1
+      - name: Build and push
+        uses: docker/build-push-action@v4
         with:
-          docker_compose: 'example-1/docker-compose.yml' # required
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          context: ./example-1
+          push: true
+          tags: user/app:latest
