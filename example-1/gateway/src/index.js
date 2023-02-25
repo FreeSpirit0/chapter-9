@@ -47,10 +47,10 @@ function setupHandlers(app) {
 
                   response.on("end", () => {
                     // Renders the video list for display in the browser.
-                    console.log(JSON.parse(data2))
+                    console.log(JSON.parse(data2));
                     res.render("video-list", {
                       videos: JSON.parse(data).videos,
-                      advertisement: JSON.parse(data2)
+                      advertisement: JSON.parse(data2),
                     });
                   });
 
@@ -118,7 +118,36 @@ function setupHandlers(app) {
   // Web page to upload a new video.
   //
   app.get("/upload", (req, res) => {
-    res.render("upload-video", {});
+    http
+      .request(
+        // Get the list of videos from the metadata microservice.
+        {
+          host: `advertisement`,
+          path: `/advertisement`,
+          method: `GET`,
+        },
+        (response) => {
+          let data2 = "";
+          response.on("data", (chunk) => {
+            data2 += chunk;
+          });
+
+          response.on("end", () => {
+            // Renders the video list for display in the browser.
+            console.log(JSON.parse(data2));
+            res.render("upload-video", {
+              advertisement: JSON.parse(data2),
+            });
+          });
+
+          response.on("error", (err) => {
+            console.error("Failed to get video list.");
+            console.error(err || `Status code: ${response.statusCode}`);
+            res.sendStatus(500);
+          });
+        }
+      )
+      .end();
   });
 
   //
@@ -141,7 +170,37 @@ function setupHandlers(app) {
 
           response.on("end", () => {
             // Renders the history for display in the browser.
-            res.render("history", { videos: JSON.parse(data).videos });
+            http
+              .request(
+                // Get the list of videos from the metadata microservice.
+                {
+                  host: `advertisement`,
+                  path: `/advertisement`,
+                  method: `GET`,
+                },
+                (response) => {
+                  let data2 = "";
+                  response.on("data", (chunk) => {
+                    data2 += chunk;
+                  });
+
+                  response.on("end", () => {
+                    // Renders the video list for display in the browser.
+                    console.log(JSON.parse(data2));
+                    res.render("history", {
+                      videos: JSON.parse(data).videos,
+                      advertisement: JSON.parse(data2),
+                    });
+                  });
+
+                  response.on("error", (err) => {
+                    console.error("Failed to get video list.");
+                    console.error(err || `Status code: ${response.statusCode}`);
+                    res.sendStatus(500);
+                  });
+                }
+              )
+              .end();
           });
 
           response.on("error", (err) => {

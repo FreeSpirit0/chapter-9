@@ -27,6 +27,24 @@
                 </div>
             </div>
 
+            {{#if advertisement}}
+                <div class="m-4 p-2 py-4 border-solid border-2 rounded-md">
+                    <h1>Advertisement</h1>
+                    <h2>You're now seeing an ads, you can't block this btw</h2>
+                    <div class="flex mt-4 gap-4">
+                        {{#each advertisement}}
+                            <a href={{this.url}} class="hover:none">
+                                <div class="p-4 w-80 border-solid border-4 rounded-lg">
+                                    <h3 class="font-bold">{{this.name}}</h3>
+                                    <h4>{{this.description}}</h4>
+                                    <img src={{this.imageUrl}}/>
+                                </div>
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+            
             <div class="m-4">
 	            <h1>Viewing history</h1>
                 <div class="m-4">
