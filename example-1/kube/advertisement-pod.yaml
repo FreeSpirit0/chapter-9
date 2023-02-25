@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/example-1-default: "true"
+    io.kompose.service: advertisement
+  name: advertisement
+spec:
+  containers:
+    - env:
+        - name: NODE_ENV
+          value: development
+        - name: PORT
+          value: "80"
+        - name: RABBIT
+          value: amqp://guest:guest@rabbit:5672
+      image: advertisement
+      name: advertisement
+      ports:
+        - containerPort: 80
+      resources: {}
+      volumeMounts:
+        - mountPath: /root/.npm
+          name: advertisement-claim0
+        - mountPath: /usr/src/app/src
+          name: advertisement-claim1
+  restartPolicy: Never
+  volumes:
+    - name: advertisement-claim0
+      persistentVolumeClaim:
+        claimName: advertisement-claim0
+    - name: advertisement-claim1
+      persistentVolumeClaim:
+        claimName: advertisement-claim1
+status: {}

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/example-1-default: "true"
+    io.kompose.service: metadata
+  name: metadata
+spec:
+  containers:
+    - env:
+        - name: DBHOST
+          value: mongodb://db:27017
+        - name: DBNAME
+          value: metadata
+        - name: NODE_ENV
+          value: development
+        - name: PORT
+          value: "80"
+        - name: RABBIT
+          value: amqp://guest:guest@rabbit:5672
+      image: metadata
+      name: metadata
+      ports:
+        - containerPort: 80
+      resources: {}
+      volumeMounts:
+        - mountPath: /root/.npm
+          name: metadata-claim0
+        - mountPath: /usr/src/app/src
+          name: metadata-claim1
+  restartPolicy: Never
+  volumes:
+    - name: metadata-claim0
+      persistentVolumeClaim:
+        claimName: metadata-claim0
+    - name: metadata-claim1
+      persistentVolumeClaim:
+        claimName: metadata-claim1
+status: {}

@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/example-1-default: "true"
+    io.kompose.service: video-upload
+  name: video-upload
+spec:
+  containers:
+    - env:
+        - name: NODE_ENV
+          value: development
+        - name: PORT
+          value: "80"
+        - name: RABBIT
+          value: amqp://guest:guest@rabbit:5672
+      image: video-upload
+      name: video-upload
+      ports:
+        - containerPort: 80
+      resources: {}
+      volumeMounts:
+        - mountPath: /root/.npm
+          name: video-upload-claim0
+        - mountPath: /usr/src/app/src
+          name: video-upload-claim1
+        - mountPath: /usr/src/app/uploads
+          name: video-upload-claim2
+  restartPolicy: Never
+  volumes:
+    - name: video-upload-claim0
+      persistentVolumeClaim:
+        claimName: video-upload-claim0
+    - name: video-upload-claim1
+      persistentVolumeClaim:
+        claimName: video-upload-claim1
+    - name: video-upload-claim2
+      persistentVolumeClaim:
+        claimName: video-upload-claim2
+status: {}

@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/example-1-default: "true"
+    io.kompose.service: video-streaming
+  name: video-streaming
+spec:
+  containers:
+    - env:
+        - name: NODE_ENV
+          value: development
+        - name: PORT
+          value: "80"
+        - name: RABBIT
+          value: amqp://guest:guest@rabbit:5672
+      image: video-streaming
+      name: video-streaming
+      ports:
+        - containerPort: 80
+      resources: {}
+      volumeMounts:
+        - mountPath: /root/.npm
+          name: video-streaming-claim0
+        - mountPath: /usr/src/app/src
+          name: video-streaming-claim1
+  restartPolicy: Never
+  volumes:
+    - name: video-streaming-claim0
+      persistentVolumeClaim:
+        claimName: video-streaming-claim0
+    - name: video-streaming-claim1
+      persistentVolumeClaim:
+        claimName: video-streaming-claim1
+status: {}

@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/example-1-default: "true"
+    io.kompose.service: video-storage
+  name: video-storage
+spec:
+  containers:
+    - env:
+        - name: PORT
+          value: "80"
+      image: mock-storage
+      name: video-storage
+      ports:
+        - containerPort: 80
+      resources: {}
+      volumeMounts:
+        - mountPath: /root/.npm
+          name: video-storage-claim0
+        - mountPath: /usr/src/app/src
+          name: video-storage-claim1
+        - mountPath: /usr/src/app/storage
+          name: video-storage-claim2
+  restartPolicy: Never
+  volumes:
+    - name: video-storage-claim0
+      persistentVolumeClaim:
+        claimName: video-storage-claim0
+    - name: video-storage-claim1
+      persistentVolumeClaim:
+        claimName: video-storage-claim1
+    - name: video-storage-claim2
+      persistentVolumeClaim:
+        claimName: video-storage-claim2
+status: {}

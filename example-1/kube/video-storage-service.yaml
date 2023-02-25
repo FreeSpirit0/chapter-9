@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: video-storage
+  name: video-storage
+spec:
+  ports:
+    - name: "4005"
+      port: 4005
+      targetPort: 80
+  selector:
+    io.kompose.service: video-storage
+status:
+  loadBalancer: {}

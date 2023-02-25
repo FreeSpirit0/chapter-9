@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db-fixture-rest-api
+  name: db-fixture-rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db-fixture-rest-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/example-1-default: "true"
+        io.kompose.service: db-fixture-rest-api
+    spec:
+      containers:
+        - env:
+            - name: DBHOST
+              value: mongodb://db:27017
+            - name: FIXTURES_DIR
+              value: fixtures
+            - name: PORT
+              value: "80"
+          image: db-fixture-rest-api
+          name: db-fixture-rest-api
+          ports:
+            - containerPort: 80
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/src/app/fixtures
+              name: db-fixture-rest-api-claim0
+            - mountPath: /usr/src/app/src
+              name: db-fixture-rest-api-claim1
+      restartPolicy: Always
+      volumes:
+        - name: db-fixture-rest-api-claim0
+          persistentVolumeClaim:
+            claimName: db-fixture-rest-api-claim0
+        - name: db-fixture-rest-api-claim1
+          persistentVolumeClaim:
+            claimName: db-fixture-rest-api-claim1
+status: {}
